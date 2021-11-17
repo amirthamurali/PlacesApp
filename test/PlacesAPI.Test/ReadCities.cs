@@ -26,8 +26,6 @@ namespace PlacesAPI.Test
     {
         private PlacesController  _controller;
         private Mock<IUniversalService> _mockUniversalService;
-
-        private Task<IEnumerable<Country>> _mockResponseFromUniversalService;
         private IActionResult _controllerResult;
 
         private static readonly String _validRequestState1 = "Tamil Nadu";
@@ -48,18 +46,17 @@ namespace PlacesAPI.Test
                 .When(_ => WhenTheRequestForCitiesIsSentToPlacesApi())
                 //Assert
                 .Then(_ => ThenTheServiceMustReturnResultIndicatingSuccess())
-                .And(_ => ThenTheReturnedResultTypeMustBeAListeOfStates())
-                .And(_ => ThenTheNumberOfStatesReturnedMustMatchTheActualCount())
+                .And(_ => ThenTheReturnedResultTypeMustBeAListeOfCities())
+                .And(_ => ThenTheNumberOfCitiesReturnedMustMatchTheActualCount())
                 .BDDfy();
                 
         }
 
         [Fact]
-        //Success scenario - Input is valid, and the entry exists in data storage
-        public void NoStatesFoundInRecords()
+        public void NoCitiesFoundInRecords()
         {
                 //Arrange
-          this.Given(_ => GivenThatTheUniversalRestApiReturnsAnEmptySetOfStates())
+          this.Given(_ => GivenThatTheUniversalRestApiReturnsAnEmptySetOfCities())
                 //Act
                 .When(_ => WhenTheRequestForCitiesIsSentToPlacesApi())
                 //Assert
@@ -74,7 +71,7 @@ namespace PlacesAPI.Test
             _mockUniversalService.Setup(service => service.GetCities(_validRequestState1)).ReturnsAsync(_inMemoryCitiesListForState1);
       }
 
-        private void GivenThatTheUniversalRestApiReturnsAnEmptySetOfStates()
+        private void GivenThatTheUniversalRestApiReturnsAnEmptySetOfCities()
         {
             _mockUniversalService = new Mock<IUniversalService>();
             _mockUniversalService.Setup(service => service.GetCities(_validRequestState1)).ReturnsAsync(new List<City>());
@@ -91,12 +88,12 @@ namespace PlacesAPI.Test
             Assert.IsType<OkObjectResult>(_controllerResult as OkObjectResult);
         }
 
-        private void ThenTheReturnedResultTypeMustBeAListeOfStates()
+        private void ThenTheReturnedResultTypeMustBeAListeOfCities()
         {
             Assert.IsType<List<City>>((_controllerResult as OkObjectResult).Value as List<City>);
         }
 
-        private void ThenTheNumberOfStatesReturnedMustMatchTheActualCount()
+        private void ThenTheNumberOfCitiesReturnedMustMatchTheActualCount()
         {
             Assert.Equal(((_controllerResult as OkObjectResult).Value as List<City>).Count, _inMemoryCitiesListForState1.Count);
         }

@@ -17,7 +17,7 @@ using PlacesAPI.Models;
 namespace PlacesAPI.Test
 {
     [Story(
-        Title = "Read all states from the external REST API",
+        Title = "Read all states for a given country, from the Universal REST API",
         AsA = "As an API Client",
         IWant = "I want to consume the service that lists all states for a country",
         SoThat = "So that I can view all available records and select one to get its states")]
@@ -26,10 +26,7 @@ namespace PlacesAPI.Test
     {
         private PlacesController  _controller;
         private Mock<IUniversalService> _mockUniversalService;
-
-        private Task<IEnumerable<Country>> _mockResponseFromUniversalService;
         private IActionResult _controllerResult;
-
         private static readonly String _validRequestCountry1 = "India";
         private static readonly List<State> _inMemoryStatesListForCountry1 = new List<State>{
                 new State(){ StateName = "Chandigarh" },
@@ -56,7 +53,6 @@ namespace PlacesAPI.Test
         }
 
         [Fact]
-        //Success scenario - Input is valid, and the entry exists in data storage
         public void NoStatesFoundInRecords()
         {
                 //Arrange
@@ -64,7 +60,7 @@ namespace PlacesAPI.Test
                 //Act
                 .When(_ => WhenTheRequestForStatesIsSentToPlacesApi())
                 //Assert
-                .Then(_ => ThenTheServiceMustReturnResultIndicatingThatNoRecordsWereFound())
+                .Then(_ => ThenTheServiceMustReturnResultIndicatingThatNoStatesWereFound())
                 .BDDfy();
                 
         }
@@ -102,7 +98,7 @@ namespace PlacesAPI.Test
             Assert.Equal(((_controllerResult as OkObjectResult).Value as List<State>).Count, _inMemoryStatesListForCountry1.Count);
         }
 
-        private void ThenTheServiceMustReturnResultIndicatingThatNoRecordsWereFound()
+        private void ThenTheServiceMustReturnResultIndicatingThatNoStatesWereFound()
         {
             Assert.IsType<NotFoundResult>(_controllerResult as NotFoundResult);
         }

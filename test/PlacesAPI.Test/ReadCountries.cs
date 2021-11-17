@@ -17,7 +17,7 @@ using PlacesAPI.Models;
 namespace PlacesAPI.Test
 {
     [Story(
-        Title = "Read all countries from the external REST API",
+        Title = "Read all countries from the Universal REST API",
         AsA = "As an API Client",
         IWant = "I want to consume the service that lists all countries",
         SoThat = "So that I can view all available countries in the system and select one to get its states")]
@@ -26,8 +26,6 @@ namespace PlacesAPI.Test
     {
         private PlacesController  _controller;
         private Mock<IUniversalService> _mockUniversalService;
-
-        private Task<IEnumerable<Country>> _mockResponseFromUniversalService;
         private IActionResult _controllerResult;
 
 
@@ -56,7 +54,6 @@ namespace PlacesAPI.Test
         }
 
         [Fact]
-        //Success scenario - Input is valid, and the entry exists in data storage
         public void NoCountriesFoundInRecords()
         {
                 //Arrange
@@ -64,7 +61,7 @@ namespace PlacesAPI.Test
                 //Act
                 .When(_ => WhenTheRequestForCountriesIsSentToPlacesApi())
                 //Assert
-                .Then(_ => ThenTheServiceMustReturnResultIndicatingThatNoRecordsWereFound())
+                .Then(_ => ThenTheServiceMustReturnResultIndicatingThatNoCountriesWereFound())
                 .BDDfy();
                 
         }
@@ -102,7 +99,7 @@ namespace PlacesAPI.Test
             Assert.Equal(((_controllerResult as OkObjectResult).Value as List<Country>).Count, _inMemoryCountryList.Count);
         }
 
-        private void ThenTheServiceMustReturnResultIndicatingThatNoRecordsWereFound()
+        private void ThenTheServiceMustReturnResultIndicatingThatNoCountriesWereFound()
         {
             Assert.IsType<NotFoundResult>(_controllerResult as NotFoundResult);
         }
