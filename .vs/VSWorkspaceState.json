@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\PlacesAPI",
+    "\\src\\PlacesWeb",
+    "\\src\\PlacesWeb\\Controllers",
+    "\\src\\PlacesWeb\\Logs",
+    "\\src\\PlacesWeb\\Services",
+    "\\src\\PlacesWeb\\Views",
+    "\\src\\PlacesWeb\\Views\\Home",
+    "\\src\\PlacesWeb\\Views\\Places"
+  ],
+  "SelectedNode": "\\src\\PlacesAPI\\PlacesAPI.csproj",
+  "PreviewInSolutionExplorer": false
+}

@@ -1,0 +1,185 @@
+@using PlacesWeb.Models
+@model PlaceOnEarth
+@{
+    ViewData["Title"] = "Places";
+}
+<div class="row">
+     <div class="col-md-8">
+         <form asp-action="Index">
+             <div class="form-group"> 
+                     <select asp-for="Country.CountryName" asp-items="ViewBag.CountrySelectList" class="form-control" id="countriesSelect">
+                         <option selected >Select a Country</option>
+                     </select>  
+             </div>
+             <div class="form-group"> 
+                     <select asp-for="State.StateName" class="form-control" id="statesSelect">
+                         <option selected >Select a State</option>
+                     </select>  
+             </div>
+             <div class="form-group"> 
+                     <select asp-for="City.CityName" class="form-control" id="citiesSelect">
+                         <option selected >Select a City</option>
+                     </select>  
+             </div>
+         </form>
+     </div>
+ </div>
+<div class="row">
+ <div class="col-md-8">
+     <h5>Your choice of Place:</h5>
+     <table style="width: 100% ">   
+    <thead>  
+        <tr>  
+            <th style="width: 33%">  
+                Country  
+            </th>  
+            <th style="width: 33%">  
+                State   
+            </th>  
+            <th style="width: 33%">  
+                City  
+            </th>
+        </tr> 
+    </thead>
+    <tbody>
+        <tr>
+            <td style="width: 33%; border: 1px solid black"><label id="SelectedCountryName" class="selectedplace"></label></td>
+            <td style="width: 33%; border: 1px solid black"><label id="SelectedStateName" class="selectedplace"></label></td>
+            <td style="width: 33%; border: 1px solid black"><label id="SelectedCityName" class="selectedplace"></label></td>
+        </tr>
+    </tbody> 
+ </div>
+ </div>
+ <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+ <script type="text/javascript">
+
+ $(document).ready(function () {
+  var selectCountryMessage = 'Select a Country';
+  var selectStateMessage = 'Select a State';
+  var selectCityMessage = 'Select a City';
+  
+  var noneMessage = 'None';
+  var naMessage = "-NA-";
+  var emptyStateResponseMessage = "No states found for the country";
+  var emptyCityResponseMessage = "No cities found for the state";
+
+
+  var $statelist = $("#statesSelect");
+  var $citylist = $("#citiesSelect");
+
+  function resetStateList()
+  {
+    $statelist.empty();
+    $statelist.append('<option selected>' + selectStateMessage + '</option>');
+  }
+
+  function resetCityList()
+  {
+    $citylist.empty();
+    $citylist.append('<option selected>' + selectCityMessage + '</option>');
+  }
+
+  function setEmptyStateList()
+  {
+    $statelist.empty();
+    $statelist.append('<option value="' + "" + '"> ' + emptyStateResponseMessage + ' </option>');
+    $("#SelectedStateName").html(naMessage);
+  }
+  
+   function setEmptyCityList()
+  {
+    $citylist.empty();
+    $citylist.append('<option value="' + "" + '"> ' + emptyCityResponseMessage + ' </option>');
+    $("#SelectedCityName").html(naMessage);
+  }
+
+$("#countriesSelect").on("change", function () {
+    var selectedCountry = $("#countriesSelect").val();
+    $("#SelectedCityName").html(noneMessage);
+    $("#SelectedStateName").html(noneMessage);
+    if(selectedCountry === selectCountryMessage)
+    {
+        resetStateList();
+        resetCityList();
+        $("#SelectedCountryName").html(noneMessage);
+    }
+    if(selectedCountry !== selectCountryMessage)
+    {
+        $("#SelectedCountryName").html(selectedCountry);
+        $.ajax({
+                url: "@Url.Action("GetStatesForSelectList")",
+                type: "GET",
+                data: { countryName: selectedCountry }, 
+                traditional: true,
+                success: function (result) {
+                    resetCityList();
+                    if(Object.keys(result).length > 0)
+                    {
+                        resetStateList();
+                        $.each(result, function (i, item) {
+                            $statelist.append('<option value="' + item["value"] + '"> ' + item["text"] + ' </option>');
+                        });
+                    }
+                    else
+                    {
+                        setEmptyStateList();
+                    }
+                },
+                error: function () {
+                    alert("Sorry we seem to have some issues. Please try later");
+                }
+            });
+        }
+    
+  });
+
+  $("#statesSelect").on("change", function () {
+    var selectedState = $("#statesSelect").val();
+    $("#SelectedStateName").html(noneMessage);
+    $("#SelectedCityName").html(noneMessage);
+    if( selectedState === selectStateMessage)
+    {
+        resetCityList();
+    }
+    if( selectedState !== selectStateMessage)
+    {
+        $("#SelectedStateName").html(selectedState);
+        $.ajax({
+            url: "@Url.Action("GetCitiesForSelectList")",
+            type: "GET",
+            data: { stateName: selectedState }, 
+            traditional: true,
+            success: function (result) {
+                
+                if(Object.keys(result).length > 0)
+                {
+                    resetCityList();
+                    $.each(result, function (i, item) {
+                        $citylist.append('<option value="' + item["value"] + '"> ' + item["text"] + ' </option>');
+                    });
+                }
+                else
+                {
+                    setEmptyCityList();
+                }
+            },
+            error: function () {
+                alert("Sorry we seem to have some issues. Please try later");
+            }
+        });
+    }
+  });
+
+  $("#citiesSelect").on("change", function () {
+    var selectedCity = $("#citiesSelect").val();
+    if( selectedCity == selectCityMessage)
+    {
+        $("#SelectedCityName").html(noneMessage);
+    }
+    else if( selectedCity !== selectCityMessage)
+    {
+        $("#SelectedCityName").html(selectedCity);
+    }
+  });
+});
+ </script>
