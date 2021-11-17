@@ -6,3 +6,8 @@
 - Step 4: Make sure you have a self-signed SSL installed for local machine. If not run the Dotnet CLI command: dotnet dev-certs https --trust
 - Step 5: Open a split terminal and change directory to PlacesApp/src/PlacesAPI and PlacesApp/src/PlacesWeb respectively. Build each project
 - Step 6: Run the PlacesAPI. Once it is up and running, run PlacesWeb
+
+# Run unit tests to generate BDDfy Report
+- Step 1: Browse to PlacesApp/Test/PlacesAPI.Test
+- Step 2: Run tests using dotnet test
+- Step 3: From file Manager, browse to location "\PlacesApp\test\PlacesAPI.Test\bin\Debug\net5.0" and open BDDfy HTML file with browser. It shows up an interactive HTML
