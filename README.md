@@ -1,6 +1,6 @@
 ﻿# Places App
  # About
-The provides a UI with cascading drop downs of the popular trio Country-State-City, typically used for filling in place details. The data is retrieved from a REST API exposed by Universal Tutorial - https://www.universal-tutorial.com/rest-apis/free-rest-api-for-country-state-city
+The web application provides a UI with cascading drop downs of the popular trio Country-State-City, typically used for filling in place details. The data is retrieved from a REST API exposed by Universal Tutorial - https://www.universal-tutorial.com/rest-apis/free-rest-api-for-country-state-city
 
 Key solution considerations:
 
